@@ -9,8 +9,6 @@ import (
 	"strconv"
 	"syscall"
 
-	"github.com/filecoin-project/lotus/build"
-
 	logging "github.com/ipfs/go-log/v2"
 )
 
@@ -60,12 +58,12 @@ func userMaxFDs() uint64 {
 
 // ManageFdLimit raise the current max file descriptor count
 // of the process based on the LOTUS_FD_MAX value
-func ManageFdLimit() (changed bool, newLimit uint64, err error) {
+func ManageFdLimit(defaultLimit uint64) (changed bool, newLimit uint64, err error) {
 	if !supportsFDManagement {
 		return false, 0, nil
 	}
 
-	targetLimit := build.DefaultFDLimit
+	targetLimit := defaultLimit
 	userLimit := userMaxFDs()
 	if userLimit > 0 {
 		targetLimit = userLimit
